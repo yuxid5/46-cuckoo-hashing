@@ -1,6 +1,7 @@
 #ifndef __WORD_SET___HPP
 #define __WORD_SET___HPP
 
+#include <cstddef>
 #include <string>
 
 namespace shindler::ics46::project3 {
@@ -27,6 +28,7 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 class BaseWordSet {
    private:
     // You may declare private functions and member variables here.
+    size_t initial_capacity;
 
    public:
     explicit BaseWordSet(size_t initialCapacity);
@@ -69,7 +71,7 @@ using WordSet =
     BaseWordSet<_impl::BASE_H1, _impl::BASE_H2, _impl::BASE_EVICTION_THRESHOLD>;
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
-BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity) {
+BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity):initial_capacity{initialCapacity} {
     // TODO: Implement this
 }
 
