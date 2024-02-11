@@ -75,6 +75,7 @@ TEST_CASE("Table:MultiInsertWithResize:ExpectInTableAndResizedTable",
     wordSet.insert("sunday");
     REQUIRE(wordSet.contains("monday"));
     REQUIRE(wordSet.contains("sunday"));
+    REQUIRE(wordSet.size()==19);
     REQUIRE(wordSet.capacity() == 23);
 }
 

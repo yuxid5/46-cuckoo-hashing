@@ -2,7 +2,9 @@
 #define __WORD_SET___HPP
 
 #include <cstddef>
+#include <optional>
 #include <string>
+#include <type_traits>
 
 namespace shindler::ics46::project3 {
 
@@ -29,6 +31,7 @@ class BaseWordSet {
    private:
     // You may declare private functions and member variables here.
     size_t current_capacity;
+    size_t h_size = 0;
     std::string* hashtable1;
     std::string* hashtable2;
 
@@ -89,18 +92,65 @@ BaseWordSet<H1, H2, EvictThreshold>::~BaseWordSet() {
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
     // TODO: Implement this
-    unsigned position = polynomialHashFunction(string, H1, current_capacity);
-    unsigned evict_times = 
-    while()
-    if (!hashtable1[position].empty()){
-        hashtable1[position] = string;
+    std::string temp_str = string;
+    if (contains(string)){
+        return;
     }
-    else{
-        unsigned position2 = polynomialHashFunction(hashtable1[position], H2, current_capacity)
-        if (!hashtable2[position2].empty()){
-            hashtable2[position2]
+    unsigned evict_time = 0;
+    while (evict_time < EvictThreshold){
+        unsigned position = polynomialHashFunction(temp_str, H1, current_capacity);
+        if (hashtable1[position].empty()){
+            hashtable1[position] = temp_str;
+            h_size++;
+            return;
+        }
+        std::swap(temp_str, hashtable1[position]);
+        evict_time++;
+        unsigned position2 = polynomialHashFunction(temp_str, H2, current_capacity);
+        if (hashtable2[position2].empty()){
+            hashtable2[position2] = temp_str;
+            h_size++;
+            return;
+        }
+        std::swap(temp_str, hashtable2[position2]);
+        evict_time++;
+    }
+    // When the code need to rehash
+    h_size = 0;
+    size_t new_capacity = 2 * current_capacity;
+    bool isPrime = false;
+    while(true){
+        isPrime = true;
+        for (size_t i = 2; i * i <= new_capacity; i++){
+            if(new_capacity % i == 0){
+                isPrime = false;
+                break;
+            }
+        }
+        if (isPrime){
+            break;
+        }
+        new_capacity++;
+    }
+    size_t old_capacity = current_capacity;
+    current_capacity = new_capacity;
+    std::string* new_hashtable1 = new std::string[current_capacity];
+    std::string* new_hashtable2 = new std::string[current_capacity];
+    std::swap(new_hashtable1, hashtable1);
+    std::swap(new_hashtable2, hashtable2);
+    for (size_t i = 0; i < old_capacity; i++){
+        if (!new_hashtable1[i].empty()){
+            insert(new_hashtable1[i]);
         }
     }
+    for (size_t i = 0; i < old_capacity; i++){
+        if (!new_hashtable2[i].empty()){
+            insert(new_hashtable2[i]);
+        }
+    }
+    insert(temp_str);
+    delete[] new_hashtable1;
+    delete[] new_hashtable2;
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
@@ -108,14 +158,11 @@ bool BaseWordSet<H1, H2, EvictThreshold>::contains(
     const std::string &string) const {
     // TODO: Implement this. Stub is only to allow code to compile
     //       (you may remove it)
-    for(unsigned i; i < current_capacity; ++i){
-        std::string compare_str1 = hashtable1[i];
-        std::string compare_str2 = hashtable2[i];
-        if (string == compare_str1 || string == compare_str2){
-            return true;
-        }
-    }
-    return false;
+    unsigned position1 = polynomialHashFunction(string, H1, current_capacity);
+    unsigned position2 = polynomialHashFunction(string, H2, current_capacity);
+    std::string compare_str1 = hashtable1[position1];
+    std::string compare_str2 = hashtable2[position2];
+    return string == compare_str1 || string == compare_str2;
 }
 
 // return how many distinct strings are in the set
@@ -123,7 +170,7 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 size_t BaseWordSet<H1, H2, EvictThreshold>::size() const noexcept {
     // TODO: Implement this. Stub is only to allow code to compile
     //       (you may remove it)
-    return {};
+    return h_size;
 }
 
 // return how large the underlying array is.
@@ -131,13 +178,28 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 size_t BaseWordSet<H1, H2, EvictThreshold>::capacity() const noexcept {
     // TODO: Implement this. Stub is only to allow code to compile
     //       (you may remove it)
-    return {};
+    return current_capacity;
 }
 
 // removes this word if it is in the wordset.
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 void BaseWordSet<H1, H2, EvictThreshold>::erase(const std::string &string) {
     // TODO: Implement this.
+    if(contains(string)){
+        unsigned position1 = polynomialHashFunction(string, H1, current_capacity);
+        unsigned position2 = polynomialHashFunction(string, H2, current_capacity);
+        std::string compare_str1 = hashtable1[position1];
+        std::string compare_str2 = hashtable2[position2];
+        if (string == compare_str1){
+            hashtable1[position1] = "";
+        }
+        else if (string == compare_str2){
+            hashtable2[position2] = "";
+        }
+    }
+    else{
+        return;
+    }
 }
 
 }  // namespace shindler::ics46::project3
