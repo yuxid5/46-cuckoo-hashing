@@ -28,7 +28,9 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 class BaseWordSet {
    private:
     // You may declare private functions and member variables here.
-    size_t initial_capacity;
+    size_t current_capacity;
+    std::string* hashtable1;
+    std::string* hashtable2;
 
    public:
     explicit BaseWordSet(size_t initialCapacity);
@@ -71,18 +73,34 @@ using WordSet =
     BaseWordSet<_impl::BASE_H1, _impl::BASE_H2, _impl::BASE_EVICTION_THRESHOLD>;
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
-BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity):initial_capacity{initialCapacity} {
+BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity):current_capacity{initialCapacity},
+hashtable1{new std::string[initialCapacity]}, 
+hashtable2{new std::string[initialCapacity]} {
     // TODO: Implement this
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 BaseWordSet<H1, H2, EvictThreshold>::~BaseWordSet() {
     // TODO: Implement this
+    delete[] hashtable1;
+    delete[] hashtable2;
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
     // TODO: Implement this
+    unsigned position = polynomialHashFunction(string, H1, current_capacity);
+    unsigned evict_times = 
+    while()
+    if (!hashtable1[position].empty()){
+        hashtable1[position] = string;
+    }
+    else{
+        unsigned position2 = polynomialHashFunction(hashtable1[position], H2, current_capacity)
+        if (!hashtable2[position2].empty()){
+            hashtable2[position2]
+        }
+    }
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
@@ -90,7 +108,14 @@ bool BaseWordSet<H1, H2, EvictThreshold>::contains(
     const std::string &string) const {
     // TODO: Implement this. Stub is only to allow code to compile
     //       (you may remove it)
-    return {};
+    for(unsigned i; i < current_capacity; ++i){
+        std::string compare_str1 = hashtable1[i];
+        std::string compare_str2 = hashtable2[i];
+        if (string == compare_str1 || string == compare_str2){
+            return true;
+        }
+    }
+    return false;
 }
 
 // return how many distinct strings are in the set

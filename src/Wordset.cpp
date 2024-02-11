@@ -12,7 +12,7 @@ size_t polynomialHashFunction(const std::string &string, unsigned int base,
     unsigned index = 0;
     for(char letter : string){
         unsigned letter_int = letter - 'a' + 1;
-        index = (index * base + letter) % mod;
+        index = (index * base + letter_int) % mod;
     }
     return index;
 }
