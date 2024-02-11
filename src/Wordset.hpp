@@ -192,9 +192,11 @@ void BaseWordSet<H1, H2, EvictThreshold>::erase(const std::string &string) {
         std::string compare_str2 = hashtable2[position2];
         if (string == compare_str1){
             hashtable1[position1] = "";
+            h_size--;
         }
         else if (string == compare_str2){
             hashtable2[position2] = "";
+            h_size--;
         }
     }
     else{
