@@ -82,4 +82,5 @@ TEST_CASE("Table:MultiInsertWithResize:ExpectInTableAndResizedTable",
     REQUIRE(wordSet.capacity() == 23);
 }
 
+
 }  // namespace
