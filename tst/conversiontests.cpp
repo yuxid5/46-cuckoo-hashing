@@ -136,4 +136,19 @@ TEST_CASE("Conversion:lead->gold:ExpectSolution",
     REQUIRE(conversionPath.size() == 4);
     REQUIRE(validConversion(conversionPath, "lead", "gold", istream2));
 }
+
+TEST_CASE("Part2:loadWords:wordSetWorks",
+          "[Part2][LoadWords]") {
+    const static size_t BASE_CAPACITY = 11;
+    proj3::WordSet words(BASE_CAPACITY);
+    std::ifstream istream("words.txt");
+    proj3::loadWordsIntoTable(istream, words);
+    std::ifstream teststream("words.txt");
+    std::string word;
+    while (teststream >> word) {
+        REQUIRE(words.contains(word));
+    }
+  REQUIRE(words.capacity() == 411527);
+}
+
 }  // namespace

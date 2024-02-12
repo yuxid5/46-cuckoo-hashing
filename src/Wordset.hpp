@@ -106,6 +106,9 @@ void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
         }
         std::swap(temp_str, hashtable1[position]);
         evict_time++;
+        if (evict_time == EvictThreshold){
+            break;
+        }
         unsigned position2 = polynomialHashFunction(temp_str, H2, current_capacity);
         if (hashtable2[position2].empty()){
             hashtable2[position2] = temp_str;
@@ -114,6 +117,9 @@ void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
         }
         std::swap(temp_str, hashtable2[position2]);
         evict_time++;
+        if (evict_time == EvictThreshold){
+            break;
+        }
     }
     // When the code need to rehash
     h_size = 0;
