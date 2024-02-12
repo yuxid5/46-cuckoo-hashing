@@ -92,4 +92,48 @@ TEST_CASE("Conversion:Ant->Eat:ExpectSolution",
     REQUIRE(validConversion(conversionPath, "ant", "eat", istream2));
 }
 
+TEST_CASE("Conversion:apple->ddddd:ExpectNoSolution",
+          "[Required][Conversion][NoSolution]") {
+    const static size_t BASE_CAPACITY = 11;
+    proj3::WordSet words{BASE_CAPACITY};
+    std::ifstream istream{"words.txt"};
+    proj3::loadWordsIntoTable(istream, words);
+
+    auto conversionPath = proj3::convert("apple", "ddddd", words);
+
+    std::ifstream istream2{"words.txt"};
+
+    REQUIRE(conversionPath.empty());
+    REQUIRE_FALSE(validConversion(conversionPath, "apple", "ddddd", istream2));
+}
+
+TEST_CASE("Conversion:reflection->deflection:ExpectSolution",
+          "[Required][Conversion][Solution]") {
+    const static size_t BASE_CAPACITY = 11;
+    proj3::WordSet words{BASE_CAPACITY};
+    std::ifstream istream{"words.txt"};
+    proj3::loadWordsIntoTable(istream, words);
+
+    auto conversionPath = proj3::convert("reflect", "deflect", words);
+
+    std::ifstream istream2{"words.txt"};
+
+    REQUIRE(conversionPath.size() == 2);
+    REQUIRE(validConversion(conversionPath, "reflect", "deflect", istream2));
+}
+
+TEST_CASE("Conversion:lead->gold:ExpectSolution",
+          "[Required][Conversion][Solution]") {
+    const static size_t BASE_CAPACITY = 11;
+    proj3::WordSet words{BASE_CAPACITY};
+    std::ifstream istream{"words.txt"};
+    proj3::loadWordsIntoTable(istream, words);
+
+    auto conversionPath = proj3::convert("lead", "gold", words);
+
+    std::ifstream istream2{"words.txt"};
+
+    REQUIRE(conversionPath.size() == 4);
+    REQUIRE(validConversion(conversionPath, "lead", "gold", istream2));
+}
 }  // namespace
