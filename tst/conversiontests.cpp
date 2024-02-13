@@ -151,4 +151,19 @@ TEST_CASE("Part2:loadWords:wordSetWorks",
   REQUIRE(words.capacity() == 411527);
 }
 
+TEST_CASE("Conversion:apple->apple:ExpectSolution",
+          "[Required][Conversion][Solution]") {
+    const static size_t BASE_CAPACITY = 11;
+    proj3::WordSet words{BASE_CAPACITY};
+    std::ifstream istream{"words.txt"};
+    proj3::loadWordsIntoTable(istream, words);
+
+    auto conversionPath = proj3::convert("apple", "apple", words);
+
+    std::ifstream istream2{"words.txt"};
+
+    REQUIRE(conversionPath.size() == 1);
+    REQUIRE(validConversion(conversionPath, "apple", "apple", istream2));
+}
+
 }  // namespace

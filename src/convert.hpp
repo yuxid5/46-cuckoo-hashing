@@ -53,6 +53,9 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
         }
         std::reverse(result.begin(), result.end());
     }
+    if (start == end){
+        result.push_back(end);
+    }
     return result;
 }
 
